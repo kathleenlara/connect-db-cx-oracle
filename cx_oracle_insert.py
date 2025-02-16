@@ -1,16 +1,10 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
 import pandas as pd
 import cx_Oracle
 import math
 import logging
 
 # Create and configure logger 
-logging.basicConfig(filename=r"C:\Users\Name\Documents\_Automations\FLU\script.log", 
+logging.basicConfig(filename=r"C:\Users\Name\Documents\_Automations\script.log", 
                     format='%(asctime)s %(message)s', 
                     filemode='w',
                     datefmt='%d-%b-%y %H:%M:%S')
@@ -35,29 +29,12 @@ def latest_file():
    basepath = r'\\SERVER\sFTP_Data\Folder\keyrec.TXT'
    xferout_df = pd.read_csv(basepath,  sep=';', index_col = False, header=0, dtype=str)
    xferout_df = xferout_df.astype(str)
-   xferout_df.rename(columns={'DATE-KEYED':'KEYREC_DT',
-                           'KEY-REC#':'KEYREC_NBR',
-                           'NDC':'NDC',
-                           'NDC DESC':'NDC_DESC',
-                           'TRANS IN STR':'RECEIVING_STORE',
-                           'TRANSFER OUT STR':'SENDING_STORE',
-                           'ITEM #':'ITEM_NBR',
-                           'QUANTITY':'QTY',
-                           'UNIT COST':'UNIT_COST_SIGN',
-                           'UNIT RETAIL':'UNIT_COST',
-                           'EXT COST':'EXT_COST',
-                           'EXT RETAIL':'EXT_RETAIL',
-                           'TRANSFER DATE':'TRANSFER_DT',
-                           'STATUS':'STATUS',
-                           'FULL/PARTIAL FLAG':'FULL_PARTIAL',
-                           })
-
    return xferout_df
 
 # Function to insert data into oracle
 def oracle_insert(df, tablename):
-    conn_usr = u'user' #enter your rdw username
-    conn_pw = u'password' #enter your rdw password
+    conn_usr = u'user' 
+    conn_pw = u'password' 
     dsnStr = cx_Oracle.makedsn("SERVER", "1248", "NAME")
 
     con = cx_Oracle.connect(user = conn_usr, password = conn_pw, dsn = dsnStr)
@@ -108,6 +85,6 @@ df = latest_file()
 df
 
 #logger.info("No. of records returned %s", df.shape)
-oracle_insert(df, 'USERNAME.KEY_REC_TBL')
+oracle_insert(df, 'DB.KEY_REC_TBL')
 logger.info("End of script")
 
